@@ -348,8 +348,8 @@ def optimalNoise(pr, k, epsilon, delta, startR, accurate):
     startR : Positive number
         A guess for the noise to try first
     accurate : Bool
-        An indication whether the computation shoul be accurate. If false, the
-        computation will take less time but the answer will be given faster
+        An indication whether the computation should be accurate. If false, the
+        computation will take less time but the answer will be less accurate
 
     Returns
     -------
