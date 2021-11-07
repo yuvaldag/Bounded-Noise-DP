@@ -162,7 +162,7 @@ def truncThresh(pr, delta):
 def logMGF(pr, g, theta, L, truncProb):
     '''
     Computes the log moment generating function. Returns the log of
-    E[exp(theta * g(x)) 1(|x| <= L)]
+    E[exp(theta * g(x) 1(|x| <= L))]
     = int_{-L}^L exp(theta * g(x)) pr(x) dx 
         + int_{-1}^{-L} exp(0) pr(x) dx + int_L^1 exp(0) pr(x) dx
     where the expectation is over x drawn from pr, and pr also denotes the
@@ -181,7 +181,7 @@ def logMGF(pr, g, theta, L, truncProb):
     Returns
     -------
     A positive number
-        The result of the integral defined above
+        The logarithm of the integral defined above
     '''
     if theta < 0:
         return 0
@@ -201,13 +201,13 @@ coeffTheta=0.065 # This is an auxiliary parameter that is used to find a good
 def logDeviationProb(pr, g, L, k, t, truncProb, Rinv):
     '''
     Given k iid random draws from pr, denoted by x_1,...,x_k, 
-    bound the *log* of the probability that sum_i g(x_i)  * 1(|x_i|<L) > t, 
+    bound the *log* of the probability that sum_i g(x_i)*1(|x_i|<L) > t, 
     where g(x) = pr.f(x+1/R)-pr.f(x).
     The bound is obtained by using the moment generating function of the 
     truncated variable
     g(x) 1(|x| < L), by invoking the function logMGF.
     The function g is intended to be g(x) = pr.f(x+1/R)-pr.f(x),
-    where R is the magnitude of noise that is being tested at the moment
+    where R is the magnitude of noise that is being tested
 
     Parameters
     ----------
@@ -253,9 +253,9 @@ def logDeviationProb(pr, g, L, k, t, truncProb, Rinv):
 def deviationInt(pr, L, k, Rinv, eps, truncProb, accurate):
     '''
     Bounds the integral
-    int_eps^np.infty Pr[sum_{i=1}^k g(x_i) > t] e^{eps-t} dt,
+    int_eps^np.infty Pr[sum_{i=1}^k g(x_i)*1(|x_i|<L) > t] e^{eps-t} dt,
     where x_1,...,x_k are iid draws from pr,
-    and g(x) = (pr.f(x+1/Rinv) - pr.f(x)) * 1(|x| < L)
+    and g(x) = pr.f(x+1/Rinv) - pr.f(x)
 
     Parameters
     ----------
@@ -272,7 +272,7 @@ def deviationInt(pr, L, k, Rinv, eps, truncProb, accurate):
     Returns
     -------
     A real number
-        The logarithm of the integral defined above
+        The integral defined above
     '''
     if Rinv > (1-L)/2:
         return 0
@@ -292,7 +292,7 @@ def deviationIntManual(func, eps, err=0.1):
     '''
     An approximation (upper bound) of the integral 
     int_eps^infty Pr[Z>t] e^{eps-t} dt, where Z is a ranom variable
-    (it will be replace with sum_i g(x_i))
+    (it will be replaced with sum_i g(x_i)1(|x_i|<L))
 
     Parameters
     ----------
@@ -330,7 +330,7 @@ def deviationIntManual(func, eps, err=0.1):
 
 def optimalNoise(pr, k, epsilon, delta, startR, accurate):
     '''
-    Given an epsilon, delta, a number of queries k, an a probability dist pr,
+    Given an epsilon, delta, a number of queries k, and a probability distribution pr,
     find an upper bound on the lowest R such that the 
     mechanism that answers k 1-sensitive queries using noise pr with magnitue 
     scaled by R is (epsilon,delta)-DP.
